@@ -928,11 +928,11 @@ boolean FastLED_GFX_Button::justReleased() { return (!currstate && laststate); }
 // NOT EXTENSIVELY TESTED YET.  MAY CONTAIN WORST BUGS KNOWN TO HUMANKIND.
 
 GFXcanvas::GFXcanvas(uint16_t w, uint16_t h) : FastLED_GFX(w, h) {
-  struct CRGB p_LED[(w * h)];
-  m_LED = p_LED;
+  m_LED = new CRGB[w * h];
 }
 
 GFXcanvas::~GFXcanvas(void) {
+  delete m_LED;
 }
 
 struct CRGB* GFXcanvas::getBuffer() {
@@ -959,6 +959,8 @@ void GFXcanvas::drawPixel(int16_t x, int16_t y, CRGB color) {
     y = HEIGHT - 1 - t;
     break;
   }
+
+  x = y % 2 == 0 ? x : (WIDTH - 1 - x);
 
   m_LED[x + y * WIDTH] = color;
 }
